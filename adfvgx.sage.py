@@ -6,6 +6,12 @@ import math
 import numpy as np
 
 def make_num_list():
+	"""
+	Creates a list to reference the spots in the matrix.
+	Returns:
+		num_list(list of tuples(int,int)): each spot in the list is a tuple that corresponds
+				to a different spot on the matrix.
+	"""
 	num_list = list()
 	for row in range(6):
 		for col in range(6):
@@ -47,20 +53,21 @@ def make_key():
 		key[row,col] = rand_letter
 		#subtracts one from size
 		size-=1
-	return key
 
+	row1 = ['F','L','1','A','O','2']
+	row2 = ['J','D','W','3','G','U']
+	row3 = ['C','I','Y','B','4','P']
+	row4 = ['R','5','Q','8','V','E']
+	row5 = ['6','K','7','Z','M','X']
+	row6 = ['S','N','H','0','T','9']
 
+	my_list = [row1,row2,row3,row4,row5,row6]
+	test = np.chararray((6,6))
 
-	"""
-	while len(all_letters) > _sage_const_0 :
-		placer = randint(_sage_const_0 , len(all_letters))
-		key_letters[x][y] = all_letters.pop(placer)
-		y += _sage_const_1
-		if y == _sage_const_6 :
-			y = _sage_const_0
-			x += _sage_const_1
-			"""
-
+	for row in range(6):
+		for col in range(6):
+			test[row,col] = my_list[row][col]
+	return test
 
 def get_spot(key, letter):
 	"""
@@ -114,6 +121,15 @@ def col_encrypt(key,message):
 	return col_list
 
 def horizontal_matrix_encrypt(word_key, col_list):
+	"""
+	Returns the third step of the encryption algorithm
+	Args:
+		word_key(string): the word key of theh algorithm
+		col_list(list of the 2 by n matrix, string): third step of encryption algorithm
+				in the form ['A','T'...]
+	Returns:
+		The final encrypted string
+	"""
 	#Gets the size of the matrix needed
 	col_num = len(word_key)
 	row_num = math.ceil((len(col_list)) / float(len(word_key)))
@@ -123,6 +139,8 @@ def horizontal_matrix_encrypt(word_key, col_list):
 	encrypted[:] = 'X'
 	row = 0
 	col = 0
+
+	#Changes the list of char's into the matrix.
 	for iteration in range(len(col_list)):
 		encrypted[row,col] = col_list[iteration]
 		if(col_num-1 == col):
@@ -131,10 +149,16 @@ def horizontal_matrix_encrypt(word_key, col_list):
 		else:
 			col+=1
 	print encrypted
-	print
-	alphabetize(word_key, encrypted)
+	return alphabetize(word_key, encrypted)
 
 def create_dict_order(word_key):
+	"""
+	Creates a dictionary that represents the spot of the column swap in the alphabetize step
+	Args:
+		word_key(string): the word that the algorithm is encrypting by
+	Returns:
+		dictionary(key: letter; value: location in matrix)
+	"""
 	char_order = dict()
 	spot = 0
 	for char in word_key:
@@ -143,31 +167,62 @@ def create_dict_order(word_key):
 	return char_order
 
 def swap_col(matrix_swap, encrypt, col_num, new_col):
-	for i in range(3):
+	"""
+	Swaps a single column
+	Args:
+		matrix_swap(matrix): full of the encrypted string, but not the swap.
+		encrypt(matrix): the final project of the swapping encryption.
+		col_num(int): the spot in matrix_swap that's being put into encrypt
+		new_col(int): the spot in encrypt matrix that the swap is being put into
+
+	"""
+	row,col = matrix_swap.shape
+	for i in range(row):
 		encrypt[i,new_col] = matrix_swap[i,col_num]
 	return encrypt
 
 def alphabetize(word_key, encrypted):
-	lst = list()
+
+	#the reordered string
+	char_order = list()
+
 	for char in word_key:
-		lst.append(char)
-	lst.sort()
+		char_order.append(char)
+	char_order.sort()
 	spot_dict = create_dict_order(word_key)
+
+	#Creates a new matrix
 	final = np.copy(encrypted)
 	for spot in range(len(word_key)):
-		old_col = spot_dict[lst[spot]]
+		old_col = spot_dict[char_order[spot]]
 		final = swap_col(encrypted,final,old_col,spot)
-	print final
-	set_string(final)
+	return final
 
 
 def set_string(encrypt_string):
+	"""
+	Changes the matrix into a string
+	Args:
+		encrypt_string(matrix): the matrix being transferred into a string
+	Returns:
+		string: the final encryted string
+	"""
+
 	final_string = ""
 	row_num, col_num = encrypt_string.shape
-	for row in range(row_num):
-		for col in range(col_num):
-			final_string+= encrypt_string[row,col]
-	print final_string
+	for row in range(col_num):
+		for col in range(row_num):
+			final_string+= encrypt_string[col,row]
+
+	format_string = ""
+	spot = 0
+	for char in final_string:
+		if(spot % 6 == 0):
+			format_string += " "
+		format_string += char
+		spot+=1
+	return format_string
+
 def encrypt(message):
 	word_key = "ENCRYPT"
 	print word_key
@@ -177,13 +232,15 @@ def encrypt(message):
 	#need to take out spaces and such
 	message = parse(message)
 	col_list = col_encrypt(key,message)
-	horizontal_matrix_encrypt(word_key, col_list)
-	return
+	print col_list
+	final_matrix = horizontal_matrix_encrypt(word_key, col_list)
+	print final_matrix
+	return set_string(final_matrix)
 
 def decrypt():
 	return
 
 def main():
-	encrypt("seemeat10")
+	print encrypt("seemeat10tomorrow")
 
 main()
