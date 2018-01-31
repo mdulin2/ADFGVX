@@ -12,7 +12,6 @@ def make_num_list():
 		num_list(list of tuples(int,int)): each spot in the list is a tuple that corresponds
 				to a different spot on the matrix.
 	"""
-
 	num_list = list()
 	for row in range(6):
 		for col in range(6):
@@ -20,14 +19,12 @@ def make_num_list():
 	return num_list
 
 def make_key():
-	"""
-	Creates a key for the algorithm using randomly generated numbers.
-	If the test is being returned, then the answer will always be the same.
-	Returns:
-		key(matrix, 6 by 6, chars: a matrix representing the ADFGVX key.
-	"""
 	xy_letters = ['A','D','F','G','V','X']
+
 	all_letters = []
+
+	#key_letters = [[]];
+
 	#creates a list to represent each spot in the key.
 	num_list = make_num_list()
 	x = _sage_const_0 ;
@@ -57,7 +54,6 @@ def make_key():
 		#subtracts one from size
 		size-=1
 
-
 	row1 = ['F','L','1','A','O','2']
 	row2 = ['J','D','W','3','G','U']
 	row3 = ['C','I','Y','B','4','P']
@@ -77,7 +73,7 @@ def get_spot(key, letter):
 	"""
 	Gets the location of a character of a letter on the key
 	Args:
-		key(matrix): the key for the encryption algorithm, 6x6 matrix
+		key(matrix): the key for the encryption algoritm, 6x6 matrix
 		letter(string): the character that is being searched for.
 	Returns:
 		row,col(tuple of ints): the location of the character in the matrix
@@ -88,6 +84,7 @@ def get_spot(key, letter):
 		for col in range(6):
 			if(letter == key[row,col]):
 				return row,col
+
 
 def get_letter_encrypt(key, letter):
 	"""
@@ -106,28 +103,21 @@ def get_letter_encrypt(key, letter):
 	# in the form of a tuple, this could be changed for something nicer...
 	return xy_letters[top],xy_letters[bottom]
 
-def parse(message):
-	"""
-	Takes out all non alpha-numeric characters
-	Args:
-		message(string): the string to be parsed
-	Returns:
-		message(string): the original message with only alpha-numeric characters
-	"""
 
+def parse(message):
 	message = message.upper()
 	outmessage = ""
 	for char in message:
-		if char.isalpha() or char.isdigit():
+		if isalpha(char) or isdigit(char):
 			outmessage += char
-	return message #outmessage
+	return outmessage
 
 def col_encrypt(key,message):
 	"""
 	Creates a list of the second step in the encryption.
 	"""
-
 	col_list = list()
+	print key
 	for char in message:
 		letter1, letter2 = get_letter_encrypt(key,char)
 		col_list.append(letter1)
@@ -144,14 +134,10 @@ def horizontal_matrix_encrypt(word_key, col_list):
 	Returns:
 		The final encrypted string
 	"""
-
 	#Gets the size of the matrix needed
 	col_num = len(word_key)
-	print col_list
-	print col_num
 	row_num = math.ceil((len(col_list)) / float(len(word_key)))
 
-	print row_num
 	#fills the matrix with all X's
 	encrypted = np.chararray((int(row_num),col_num))
 	encrypted[:] = 'X'
@@ -177,7 +163,6 @@ def create_dict_order(word_key):
 	Returns:
 		dictionary(key: letter; value: location in matrix)
 	"""
-
 	char_order = dict()
 	spot = 0
 	for char in word_key:
@@ -195,38 +180,28 @@ def swap_col(matrix_swap, encrypt, col_num, new_col):
 		new_col(int): the spot in encrypt matrix that the swap is being put into
 
 	"""
-
 	row,col = matrix_swap.shape
 	for i in range(row):
 		encrypt[i,new_col] = matrix_swap[i,col_num]
 	return encrypt
 
-def alphabetize(word_key, encrypted_matrix):
-	"""
-	Reordered the matrix based upon the realphabetize technique of the key
-	Args:
-		word_key(string): a word that's the key encryption
-		encrypted(matrix): the encrypted matrix to be alphabetized
-	Returns:
-		final(matrix): the matrix that has the columns properly switched.
-	"""
+def alphabetize(word_key, encrypted):
 
 	#the reordered string
 	char_order = list()
 
 	for char in word_key:
-		#print char
 		char_order.append(char)
 	char_order.sort()
 	spot_dict = create_dict_order(word_key)
 
 	#Creates a new matrix
-	final = np.copy(encrypted_matrix)
+	final = np.copy(encrypted)
 	for spot in range(len(word_key)):
 		old_col = spot_dict[char_order[spot]]
-		final = swap_col(encrypted_matrix,final,old_col,spot)
-	print final
+		final = swap_col(encrypted,final,old_col,spot)
 	return final
+
 
 def set_string(encrypt_string):
 	"""
@@ -237,57 +212,65 @@ def set_string(encrypt_string):
 		string: the final encryted string
 	"""
 
-	#turns the matrix into a string
 	final_string = ""
 	row_num, col_num = encrypt_string.shape
-	#these are switched because of the matrix to string algorithm
+<<<<<<< HEAD
 	for row in range(col_num):
 		for col in range(row_num):
 			final_string+= encrypt_string[col,row]
 
-	#adds more X's to the string if not divided into groups of 6.
-	go = True
-	while(go == True):
-		if(len(final_string) % 6 == 0):
-			go = False
-		else:
-			final_string+='X'
-
-	#Divides the string into groups of 6.
-	spot = 0
 	format_string = ""
+	spot = 0
 	for char in final_string:
 		if(spot % 6 == 0):
 			format_string += " "
 		format_string += char
 		spot+=1
-
 	return format_string
 
-def encrypt(message,word_key, key):
+def encrypt(message):
+	word_key = "ENCRYPT"
+	print word_key
+=======
+	for row in range(row_num):
+		for col in range(col_num):
+			final_string+= encrypt_string[row,col]
+	print final_string
+>>>>>>> e3af17301858ec79fdeb3bcd2c2d529570704621
+
+def encrypt(message, key):
 	#probably should be parsing stuff here...
 	#need to take out spaces and such
 	message = parse(message)
 	col_list = col_encrypt(key,message)
+<<<<<<< HEAD
+	print col_list
 	final_matrix = horizontal_matrix_encrypt(word_key, col_list)
+	print final_matrix
 	return set_string(final_matrix)
-	#return horizontal_matrix_encrypt(key, col_list)
+=======
+	return horizontal_matrix_encrypt(word_key, col_list)
+>>>>>>> e3af17301858ec79fdeb3bcd2c2d529570704621
 
 def decrypt(ciphertext, keyword, key):
 	# takes ciphertext, returns playtext.
 	decKeyword = sorted(keyword)
 	wKeyRows = floor(len(ciphertext) / len(keyword))
-
+	
 	return
 
 def main():
+<<<<<<< HEAD
+	print encrypt("seemeat10tomorrow")
+=======
 	word_key = "ENCRYPT"
 	plaintext = "seemeat10"
-
+	print word_key
 	key = make_key()
-	ciphertext = encrypt(plaintext,word_key, key)
-	print ciphertext
-	#decrypted = decrypt(ciphertext, word_key, key)
-	#print "Decrypted: " + decrypted
+	ciphertext = encrypt(plaintext, key)
+
+	decrypted = decrypt(ciphertext, word_key, key)
+	print "Decrypted: " + decrypted
+>>>>>>> e3af17301858ec79fdeb3bcd2c2d529570704621
 
 main()
