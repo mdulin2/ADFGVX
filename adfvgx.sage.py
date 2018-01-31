@@ -99,7 +99,11 @@ def get_letter_encrypt(key, letter):
 
 def parse(message):
 	message = message.upper()
-	return message
+	outmessage = ""
+	for char in message:
+		if isalpha(char) or isdigit(char):
+			outmessage += char
+	return outmessage
 
 def col_encrypt(key,message):
 	"""
@@ -168,22 +172,29 @@ def set_string(encrypt_string):
 		for col in range(col_num):
 			final_string+= encrypt_string[row,col]
 	print final_string
-def encrypt(message):
-	word_key = "ENCRYPT"
-	print word_key
 
-	key = make_key()
+def encrypt(message, key):
 	#probably should be parsing stuff here...
 	#need to take out spaces and such
 	message = parse(message)
 	col_list = col_encrypt(key,message)
-	horizontal_matrix_encrypt(word_key, col_list)
-	return
+	return horizontal_matrix_encrypt(word_key, col_list)
 
-def decrypt():
+def decrypt(ciphertext, keyword, key):
+	# takes ciphertext, returns playtext.
+	decKeyword = sorted(keyword)
+	wKeyRows = floor(len(ciphertext) / len(keyword))
+	
 	return
 
 def main():
-	encrypt("seemeat10")
+	word_key = "ENCRYPT"
+	plaintext = "seemeat10"
+	print word_key
+	key = make_key()
+	ciphertext = encrypt(plaintext, key)
+
+	decrypted = decrypt(ciphertext, word_key, key)
+	print "Decrypted: " + decrypted
 
 main()
