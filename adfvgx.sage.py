@@ -146,6 +146,7 @@ def swap_col(matrix_swap, encrypt, col_num, new_col):
 	for i in range(3):
 		encrypt[i,new_col] = matrix_swap[i,col_num]
 	return encrypt
+
 def alphabetize(word_key, encrypted):
 	lst = list()
 	for char in word_key:
@@ -157,9 +158,16 @@ def alphabetize(word_key, encrypted):
 		old_col = spot_dict[lst[spot]]
 		final = swap_col(encrypted,final,old_col,spot)
 	print final
+	set_string(final)
 
 
-
+def set_string(encrypt_string):
+	final_string = ""
+	row_num, col_num = encrypt_string.shape
+	for row in range(row_num):
+		for col in range(col_num):
+			final_string+= encrypt_string[row,col]
+	print final_string
 def encrypt(message):
 	word_key = "ENCRYPT"
 	print word_key
