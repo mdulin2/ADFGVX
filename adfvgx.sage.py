@@ -278,6 +278,8 @@ def createCENPRTY(decKeyword, wKeyRows, wKeyCols):
 	return grid
 
 def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledKeyword,alphabatizedKeyword):
+	# Unalphabetize the CENPRTY table to match the letters in the key word.
+	# Returns the dealphabetized table.
 	gridENCRYPT = np.chararray((wKeyRows,wKeyCols))
 	for i in range(len(alphabatizedKeyword)):
 		for j in range(len(jumbledKeyword)):
