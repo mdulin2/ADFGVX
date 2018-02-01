@@ -285,43 +285,25 @@ def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledKeyword,alphabatiz
 	gridENCRYPT = np.chararray((wKeyRows,wKeyCols))
 	for i in range(len(alphabatizedKeyword)):
 		for j in range(len(jumbledKeyword)):
-			if(jumbledKeyword[i] == alphabatizedKeyword[j]):
+			if(jumbledKeyword[j] == alphabatizedKeyword[i]):
 				swap_col(gridCENPRTY, gridENCRYPT, i, j)
 
 	return gridENCRYPT
 
-def getFinalMessage(gridEncrypt, keyword, ciphertext):
-	lengthCipherText = len(ciphertext)
+def getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key):
+	ciphertext = ""
+	for i in range(wKeyCols):
+		for j in range(wKeyRows):
+			ciphertext += gridENCRYPT[j][i]
 
-	char1Row = 0
-	char1Col = 0
-	char2Row = 0
-	char2Col = 1
-	finalText = ""
-	letterCount = 0;
+	message = ""
+	i = 0
+	while i < len(ciphertext) - 1:
+		message += getChar(ciphertext[i], ciphertext[i + 1], key)
+		i += 2
 
-	while (letterCount < (lengthCipherText - 1)):
-		letterCount = letterCount + 2
-		rowChar = gridEncrypt[char1Row,char1Col]
-		colChar = gridEncrypt[char2Row,char2Col]
-
-		currChar = getChar(rowChar, colChar, gridEncrypt)
-
-		finalText += currChar
-		char1Row += 1
-		char1Col += 1
-		char2Row += 1
-		char2Col += 1
-		if(char1Row >= len(keyword)):
-			char1Row = char1Row % len(keyword)
-		if(char1Col >= len(keyword)):
-			char1Col = char1Col % len(keyword)
-		if(char2Row >= len(keyword)):
-			char2Row = char2Row % len(keyword)
-		if(char2Col >= len(keyword)):
-			char2Col = char2Col % len(keyword)
-
-	return finalText
+	print "Message: " + message
+	return message
 
 def getChar(rowChar, colChar, gridEncrypt):
 	word = "ADFGVX"
@@ -375,9 +357,9 @@ def decrypt(ciphertext, keyword, key):
 	#rearrange to match decKeyword
 	gridENCRYPT = decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, keyword, decKeyword)
 	print gridENCRYPT
-	#5. translate rowa/cols to string
+	#5. translate rows/cols to string
 	#extract letters in sets of two, copy to string letterRowCols
-	#finalString = getFinalMessage(gridENCRYPT, keyword, ciphertext)
+	finalString = getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key)
 
 	#return finalString
 
@@ -389,6 +371,6 @@ def main():
 	ciphertext = encrypt(plaintext,word_key, key)
 	print ciphertext
 	decrypted = decrypt(ciphertext, word_key, key)
-	#print "Decrypted: " + decrypted
+	print "Decrypted: " + decrypted
 
 main()
