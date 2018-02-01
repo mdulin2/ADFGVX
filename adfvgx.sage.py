@@ -26,7 +26,7 @@ def make_key():
 	Returns:
 		key(matrix, 6 by 6, chars: a matrix representing the ADFGVX key.
 	"""
-	
+
 	xy_letters = ['A','D','F','G','V','X']
 	all_letters = []
 	#creates a list to represent each spot in the key.
@@ -289,6 +289,12 @@ def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledKeyword,alphabatiz
 	return gridENCRYPT
 
 def getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key):
+	"""
+		This method takes the table of characters corresponding to
+		the keyword, the keyword, the number of rows and columns
+		for the table, and the key table of characters and returns
+		the original plaintext methods, albeit without spaces.
+	"""
 	print "Our key from before:"
 	ciphertext = ""
 	for i in range(wKeyRows):
@@ -306,6 +312,11 @@ def getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key):
 	return message
 
 def getChar(rowChar, colChar, gridEncrypt):
+	"""
+		This method takes the row and column numbers that
+		correspond to a particular character and returns
+		said character.
+	"""
 	word = "ADFGVX"
 
 	rowIndex = getIndex(rowChar, word)
@@ -321,6 +332,8 @@ def getChar(rowChar, colChar, gridEncrypt):
 
 
 def getIndex(thisChar, word):
+	# This method returns the index of a particular
+	# character in a given string
 	for i in range(len(word)):
 		if(thisChar == word[i]):
 			return i
@@ -339,7 +352,10 @@ def encrypt(message,word_key, key):
 	#return horizontal_matrix_encrypt(key, col_list)
 
 def decrypt(ciphertext, keyword, key):
-	# takes ciphertext, returns playtext.
+	# This method takes in the ciphertext, the keyword, and the
+	# key, and over the course of 5 steps returns a plaintext
+	# message
+
 	#1. alphabetize keyword
 	decKeyword = sorted(keyword)
 	ciphertext = ciphertext.replace(" ","")
