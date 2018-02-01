@@ -122,10 +122,10 @@ def parse(message):
 			outmessage += char
 	return message #outmessage
 
-def col_encrypt(key,message):ke_
-	#	"""
-	#	Creates a list of the second step in the encryption.
-	#	"""
+#	"""
+#	Creates a list of the second step in the encryption.
+#	"""
+def col_encrypt(key,message):
 	col_list = list()
 	for char in message:
 		letter1, letter2 = get_letter_encrypt(key,char)
@@ -274,20 +274,20 @@ def createCENPRTY(decKeyword, wKeyRows, wKeyCols):
 	count = 0;
 	for i in range(wKeyRows):
 		for j in range(wKeyCols):
-		grid[i,j] = deckeyword[count]
+			grid[i,j] = decKeyword[count]
 
 	return grid
 
-def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledkeyword,alphabatizedKeyword):
+def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledKeyword,alphabatizedKeyword):
 	gridENCRYPT = np.chararray((wKeyRows,wKeyCols))
 	for i in range(len(alphabatizedKeyword)):
-		for j in range(len(jumbledkeyword)):
+		for j in range(len(jumbledKeyword)):
 			if(jumbledKeyword[i] == alphabatizedKeyword[j]):
 				swap_col(gridCENPRTY, gridENCRYPT, i, j)
 
 	return gridENCRYPT
 
-def getFinal Message(gridEncrypt, keyword, ciphertext):
+def getFinalMessage(gridEncrypt, keyword, ciphertext):
 	lengthCipherText = len(ciphertext)
 
 	char1Row = 0
@@ -297,18 +297,18 @@ def getFinal Message(gridEncrypt, keyword, ciphertext):
 	finalText = ""
 	letterCount = 0;
 
-	while (letterCount <= lengthCipherText):
+	while (letterCount < (lengthCipherText - 1)):
 		letterCount = letterCount + 2
 		rowChar = gridEncrypt[char1Row,char1Col]
 		colChar = gridEncrypt[char2Row,char2Col]
 
-		currChar= getChar(rowChar, colChar, gridEncrypt)
+		currChar = getChar(rowChar, colChar, gridEncrypt)
 
 		finalText += currChar
-		char1Row++
-		char1Col++
-		char2Row++
-		char2Col++
+		char1Row += 1
+		char1Col += 1
+		char2Row += 1
+		char2Col += 1
 		if(char1Row >= len(keyword)):
 			char1Row = char1Row % len(keyword)
 		if(char1Col >= len(keyword)):
@@ -330,8 +330,10 @@ def getChar(rowChar, colChar, gridEncrypt):
 		print "CANNOT DECRYPT"
 	else:
 		character = gridEncrypt[rowIndex, colIndex]
+		return character
 
-	return character
+	raise Exception("Decryption Error")
+
 
 def getIndex(thisChar, word):
 	for i in range(len(word)):
