@@ -303,7 +303,7 @@ def getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key):
 		for the table, and the key table of characters and returns
 		the original plaintext methods, albeit without spaces.
 	"""
-	print "Our key from before:"
+	# print "Our key from before:"
 	ciphertext = ""
 	for i in range(wKeyRows):
 		for j in range(wKeyCols):
@@ -350,12 +350,17 @@ def getIndex(thisChar, word):
 
 
 def encrypt(message,word_key, key):
-	#probably should be parsing stuff here...
-	#need to take out spaces and such
+	# Take a string as a message, a keyword, and a key with characters
+	# in a table.
 	message = parse(message)
+	# show parsed message
 	print message
 	col_list = col_encrypt(key,message)
+	print "Second step of encryption:"
+	print col_list
 	final_matrix = horizontal_matrix_encrypt(word_key, col_list)
+	print "Final step of encryption:"
+	print final_matrix
 	return set_string(final_matrix)
 	#return horizontal_matrix_encrypt(key, col_list)
 
@@ -386,11 +391,15 @@ def decrypt(ciphertext, keyword, key):
 
 def main():
 	word_key = "ENCRYPT"
-	plaintext = "super cali fragilistic expialidocious"
+	plaintext = "see me at 10"
 
 	key = make_key()
+	print "Key:"
+	print key
 	ciphertext = encrypt(plaintext,word_key, key)
 	print ciphertext
+	print ""
+	print "Decrypting"
 	decrypted = decrypt(ciphertext, word_key, key)
 	print "Decrypted: " + decrypted
 
