@@ -120,7 +120,7 @@ def parse(message):
 	for char in message:
 		if char.isalpha() or char.isdigit():
 			outmessage += char
-	return message #outmessage
+	return outmessage #outmessage
 
 #	"""
 #	Creates a list of the second step in the encryption.
@@ -335,6 +335,7 @@ def encrypt(message,word_key, key):
 	#probably should be parsing stuff here...
 	#need to take out spaces and such
 	message = parse(message)
+	print message
 	col_list = col_encrypt(key,message)
 	final_matrix = horizontal_matrix_encrypt(word_key, col_list)
 	return set_string(final_matrix)
@@ -368,7 +369,7 @@ def decrypt(ciphertext, keyword, key):
 
 def main():
 	word_key = "ENCRYPT"
-	plaintext = "greenside"
+	plaintext = "super cali fragilistic expialidocious"
 
 	key = make_key()
 	ciphertext = encrypt(plaintext,word_key, key)
