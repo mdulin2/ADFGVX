@@ -122,11 +122,10 @@ def parse(message):
 			outmessage += char
 	return message #outmessage
 
-def col_encrypt(key,message):
-	"""
-	Creates a list of the second step in the encryption.
-	"""
-
+def col_encrypt(key,message):ke_
+	#	"""
+	#	Creates a list of the second step in the encryption.
+	#	"""
 	col_list = list()
 	for char in message:
 		letter1, letter2 = get_letter_encrypt(key,char)
@@ -264,6 +263,84 @@ def set_string(encrypt_string):
 
 	return format_string
 
+def createCENPRTY(decKeyword, wKeyRows, wKeyCols):
+	#create 2D matrix/ array with dimensions wKeyRows x wKeyCols
+	#initialzed to lowerclase x so we can see if the characters are being
+	#inputted correctly
+	grid = np.chararray((wKeyRows,wKeyCols))
+
+	#iterate through nested for loops to enter the characters of decKeyword
+	#into the grid
+	count = 0;
+	for i in range(wKeyRows):
+		for j in range(wKeyCols):
+		grid[i,j] = deckeyword[count]
+
+	return grid
+
+def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledkeyword,alphabatizedKeyword):
+	gridENCRYPT = np.chararray((wKeyRows,wKeyCols))
+	for i in range(len(alphabatizedKeyword)):
+		for j in range(len(jumbledkeyword)):
+			if(jumbledKeyword[i] == alphabatizedKeyword[j]):
+				swap_col(gridCENPRTY, gridENCRYPT, i, j)
+
+	return gridENCRYPT
+
+def getFinal Message(gridEncrypt, keyword, ciphertext):
+	lengthCipherText = len(ciphertext)
+
+	char1Row = 0
+	char1Col = 0
+	char2Row = 0
+	char2Col = 1
+	finalText = ""
+	letterCount = 0;
+
+	while (letterCount <= lengthCipherText):
+		letterCount = letterCount + 2
+		rowChar = gridEncrypt[char1Row,char1Col]
+		colChar = gridEncrypt[char2Row,char2Col]
+
+		currChar= getChar(rowChar, colChar, gridEncrypt)
+
+		finalText += currChar
+		char1Row++
+		char1Col++
+		char2Row++
+		char2Col++
+		if(char1Row >= len(keyword)):
+			char1Row = char1Row % len(keyword)
+		if(char1Col >= len(keyword)):
+			char1Col = char1Col % len(keyword)
+		if(char2Row >= len(keyword)):
+			char2Row = char2Row % len(keyword)
+		if(char2Col >= len(keyword)):
+			char2Col = char2Col % len(keyword)
+
+	return finalText
+
+def getChar(rowChar, colChar, gridEncrypt):
+	word = "ADFGVX"
+
+	rowIndex = getIndex(rowChar, word)
+	colIndex = getIndex(colChar, word)
+
+	if(rowIndex == -1 or colIndex == -1):
+		print "CANNOT DECRYPT"
+	else:
+		character = gridEncrypt[rowIndex, colIndex]
+
+	return character
+
+def getIndex(thisChar, word):
+	for i in range(len(word)):
+		if(thisChar == word[i]):
+			return i
+
+	return -1
+
+
 def encrypt(message,word_key, key):
 	#probably should be parsing stuff here...
 	#need to take out spaces and such
@@ -275,10 +352,27 @@ def encrypt(message,word_key, key):
 
 def decrypt(ciphertext, keyword, key):
 	# takes ciphertext, returns playtext.
+	#1. alphabetize keyword
 	decKeyword = sorted(keyword)
+
+	#2. floor[length of ciphertext/ length of keyword]
 	wKeyRows = floor(len(ciphertext) / len(keyword))
 
-	return
+	#3. put remaining letters in grid
+	#insert alg to create 2D array of dimensions wKeyRows x wKeyCols
+	wKeyCols = len(keyword)
+
+	gridCENPRTY = createCENPRTY(decKeyword, wKeyRows, wKeyCols)
+
+	#4. rearrange columns to match non- alphabetized keyword
+	#rearrange to match decKeyword
+	gridENCRYPT = decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, keyword, decKeyword)
+
+	#5. translate rowa/cols to string
+	#extract letters in sets of two, copy to string letterRowCols
+	finalString = getFinalMessage(gridENCRYPT, keyword, ciphertext)
+
+	return finalString
 
 def main():
 	word_key = "ENCRYPT"
@@ -287,7 +381,7 @@ def main():
 	key = make_key()
 	ciphertext = encrypt(plaintext,word_key, key)
 	print ciphertext
-	#decrypted = decrypt(ciphertext, word_key, key)
-	#print "Decrypted: " + decrypted
+	decrypted = decrypt(ciphertext, word_key, key)
+	print "Decrypted: " + decrypted
 
 main()
