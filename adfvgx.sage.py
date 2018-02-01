@@ -291,18 +291,21 @@ def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledKeyword,alphabatiz
 	return gridENCRYPT
 
 def getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key):
+	print "Our key from before:"
+	print key
 	ciphertext = ""
-	for i in range(wKeyCols):
-		for j in range(wKeyRows):
-			ciphertext += gridENCRYPT[j][i]
+	for i in range(wKeyRows):
+		for j in range(wKeyCols):
+			ciphertext += gridENCRYPT[i][j]
 
+	print "Ciphertext: " + ciphertext
 	message = ""
 	i = 0
 	while i < len(ciphertext) - 1:
 		message += getChar(ciphertext[i], ciphertext[i + 1], key)
 		i += 2
 
-	print "Message: " + message
+	#print "Message: " + message
 	return message
 
 def getChar(rowChar, colChar, gridEncrypt):
@@ -361,7 +364,7 @@ def decrypt(ciphertext, keyword, key):
 	#extract letters in sets of two, copy to string letterRowCols
 	finalString = getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key)
 
-	#return finalString
+	return finalString
 
 def main():
 	word_key = "ENCRYPT"
