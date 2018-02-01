@@ -244,6 +244,7 @@ def set_string(encrypt_string):
 		for col in range(row_num):
 			final_string+= encrypt_string[col,row]
 
+	"""
 	#adds more X's to the string if not divided into groups of 6.
 	go = True
 	while(go == True):
@@ -251,6 +252,7 @@ def set_string(encrypt_string):
 			go = False
 		else:
 			final_string+='X'
+	"""
 
 	#Divides the string into groups of 6.
 	spot = 0
@@ -268,13 +270,14 @@ def createCENPRTY(decKeyword, wKeyRows, wKeyCols):
 	#initialzed to lowerclase x so we can see if the characters are being
 	#inputted correctly
 	grid = np.chararray((wKeyRows,wKeyCols))
-
+	print decKeyword
 	#iterate through nested for loops to enter the characters of decKeyword
 	#into the grid
 	count = 0;
-	for i in range(wKeyRows):
-		for j in range(wKeyCols):
-			grid[i,j] = decKeyword[count]
+	for i in range(0,wKeyCols):
+		for j in range(0,wKeyRows):
+			grid[j,i] = decKeyword[count]
+			count+=1
 
 	return grid
 
@@ -356,25 +359,27 @@ def decrypt(ciphertext, keyword, key):
 	# takes ciphertext, returns playtext.
 	#1. alphabetize keyword
 	decKeyword = sorted(keyword)
+	print decKeyword
 
 	#2. floor[length of ciphertext/ length of keyword]
 	wKeyRows = floor(len(ciphertext) / len(keyword))
+	print wKeyRows
 
 	#3. put remaining letters in grid
 	#insert alg to create 2D array of dimensions wKeyRows x wKeyCols
 	wKeyCols = len(keyword)
-
-	gridCENPRTY = createCENPRTY(decKeyword, wKeyRows, wKeyCols)
-
+	ciphertext = ciphertext.replace(" ","")
+	gridCENPRTY = createCENPRTY(ciphertext, wKeyRows, wKeyCols)
+	print gridCENPRTY
 	#4. rearrange columns to match non- alphabetized keyword
 	#rearrange to match decKeyword
 	gridENCRYPT = decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, keyword, decKeyword)
-
+	print gridENCRYPT
 	#5. translate rowa/cols to string
 	#extract letters in sets of two, copy to string letterRowCols
-	finalString = getFinalMessage(gridENCRYPT, keyword, ciphertext)
+	#finalString = getFinalMessage(gridENCRYPT, keyword, ciphertext)
 
-	return finalString
+	#return finalString
 
 def main():
 	word_key = "ENCRYPT"
@@ -384,6 +389,6 @@ def main():
 	ciphertext = encrypt(plaintext,word_key, key)
 	print ciphertext
 	decrypted = decrypt(ciphertext, word_key, key)
-	print "Decrypted: " + decrypted
+	#print "Decrypted: " + decrypted
 
 main()
