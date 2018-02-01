@@ -368,7 +368,7 @@ def decrypt(ciphertext, keyword, key):
 
 def main():
 	word_key = "ENCRYPT"
-	plaintext = "seemeat10"
+	plaintext = "greenside"
 
 	key = make_key()
 	ciphertext = encrypt(plaintext,word_key, key)
