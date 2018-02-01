@@ -26,6 +26,7 @@ def make_key():
 	Returns:
 		key(matrix, 6 by 6, chars: a matrix representing the ADFGVX key.
 	"""
+	
 	xy_letters = ['A','D','F','G','V','X']
 	all_letters = []
 	#creates a list to represent each spot in the key.
@@ -146,11 +147,9 @@ def horizontal_matrix_encrypt(word_key, col_list):
 
 	#Gets the size of the matrix needed
 	col_num = len(word_key)
-	print col_list
-	print col_num
+
 	row_num = math.ceil((len(col_list)) / float(len(word_key)))
 
-	print row_num
 	#fills the matrix with all X's
 	encrypted = np.chararray((int(row_num),col_num))
 	encrypted[:] = 'X'
@@ -165,7 +164,6 @@ def horizontal_matrix_encrypt(word_key, col_list):
 			row +=1
 		else:
 			col+=1
-	print encrypted
 	return alphabetize(word_key, encrypted)
 
 def create_dict_order(word_key):
@@ -224,7 +222,6 @@ def alphabetize(word_key, encrypted_matrix):
 	for spot in range(len(word_key)):
 		old_col = spot_dict[char_order[spot]]
 		final = swap_col(encrypted_matrix,final,old_col,spot)
-	print final
 	return final
 
 def set_string(encrypt_string):
@@ -270,10 +267,9 @@ def createCENPRTY(decKeyword, wKeyRows, wKeyCols):
 	#initialzed to lowerclase x so we can see if the characters are being
 	#inputted correctly
 	grid = np.chararray((wKeyRows,wKeyCols))
-	print decKeyword
 	#iterate through nested for loops to enter the characters of decKeyword
 	#into the grid
-	count = 0;
+	count = 0
 	for i in range(0,wKeyCols):
 		for j in range(0,wKeyRows):
 			grid[j,i] = decKeyword[count]
@@ -292,7 +288,6 @@ def decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, jumbledKeyword,alphabatiz
 
 def getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key):
 	print "Our key from before:"
-	print key
 	ciphertext = ""
 	for i in range(wKeyRows):
 		for j in range(wKeyCols):
@@ -345,22 +340,18 @@ def decrypt(ciphertext, keyword, key):
 	# takes ciphertext, returns playtext.
 	#1. alphabetize keyword
 	decKeyword = sorted(keyword)
-	print decKeyword
-
+	ciphertext = ciphertext.replace(" ","")
 	#2. floor[length of ciphertext/ length of keyword]
 	wKeyRows = floor(len(ciphertext) / len(keyword))
-	print wKeyRows
-
 	#3. put remaining letters in grid
 	#insert alg to create 2D array of dimensions wKeyRows x wKeyCols
 	wKeyCols = len(keyword)
-	ciphertext = ciphertext.replace(" ","")
+
+
 	gridCENPRTY = createCENPRTY(ciphertext, wKeyRows, wKeyCols)
-	print gridCENPRTY
 	#4. rearrange columns to match non- alphabetized keyword
 	#rearrange to match decKeyword
 	gridENCRYPT = decryptAlphabatize(gridCENPRTY,wKeyRows, wKeyCols, keyword, decKeyword)
-	print gridENCRYPT
 	#5. translate rows/cols to string
 	#extract letters in sets of two, copy to string letterRowCols
 	finalString = getFinalMessage(gridENCRYPT, keyword, wKeyCols, wKeyRows, key)
